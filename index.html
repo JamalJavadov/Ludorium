@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ludorium.az - Premium Steam Oyunları</title>
+  <style>
+    /* =========================
+       THEME / PALETTE (edit here)
+       ========================= */
+    :root{
+      /* Palette extracted from your image (you can replace these hex values) */
+      --pal-1:#F57C00;  /* deep orange */
+      --pal-2:#FFA000;  /* orange */
+      --pal-3:#FFB300;  /* amber */
+      --pal-4:#FFC107;  /* warm yellow */
+      --pal-5:#FFEB3B;  /* bright yellow */
+
+      /* Semantics mapped to palette */
+      --bg-1: var(--pal-1);
+      --bg-2: #CE5501;              /* header solid (can set to var(--pal-2)) */
+      --accent-1: var(--pal-2);
+      --accent-2: var(--pal-5);
+      --text: #ffffff;
+      --muted: rgba(255,255,255,.65);
+      --border: rgba(255,255,255,.08);
+      --glass: rgba(255,255,255,.04);
+    }
+
+    /* ===== Base ===== */
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{
+      font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+      background:var(--bg-1);
+      color:var(--text);
+      overflow-x:hidden;
+    }
+
+    /* ===== Header ===== */
+    .header{
+      position:fixed;top:0;left:0;width:100%;z-index:1000;
+      background:var(--bg-2);
+      backdrop-filter:blur(20px);
+      border-bottom:1px solid rgba(0,0,0,.12);
+      transition:box-shadow .3s ease;
+    }
+    .header.scrolled{box-shadow:0 10px 40px rgba(0,0,0,.35)}
+    .nav-container{max-width:1400px;margin:0 auto;padding:1.2rem 5%;display:flex;justify-content:space-between;align-items:center}
+    .logo{
+      font-size:2rem;font-weight:800;letter-spacing:-.5px;cursor:pointer;
+      background:linear-gradient(135deg,var(--accent-1),var(--accent-2));
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    }
+    .nav-links{display:flex;gap:2rem;align-items:center}
+    .nav-links a{
+      color:var(--text);text-decoration:none;font-weight:500;position:relative;transition:color .25s;
+    }
+    .nav-links a::after{
+      content:'';position:absolute;left:0;bottom:-6px;height:2px;width:0;
+      background:linear-gradient(90deg,var(--accent-1),var(--accent-2));
+      transition:width .25s;
+    }
+    .nav-links a:hover{color:var(--accent-2)}
+    .nav-links a:hover::after{width:100%}
+
+    /* ===== Hero ===== */
+    .hero{position:relative;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-top:72px}
+    .hero-background{position:absolute;inset:0;background:linear-gradient(135deg,var(--bg-1) 0%, #CE5501 100%)}
+    .hero-grid{
+      position:absolute;inset:0;opacity:.5;
+      background-image:
+        linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);
+      background-size:50px 50px;
+      animation:gridMove 20s linear infinite;
+    }
+    @keyframes gridMove{to{transform:translate(50px,50px)}}
+    .floating-shapes{position:absolute;inset:0}
+    .shape{position:absolute;border-radius:50%;filter:blur(60px);opacity:.16;animation:float 20s ease-in-out infinite}
+    .shape:nth-child(1){width:420px;height:420px;background:var(--accent-1);top:-220px;left:-120px}
+    .shape:nth-child(2){width:520px;height:520px;background:var(--accent-2);right:-160px;bottom:-260px;animation-delay:5s}
+    .shape:nth-child(3){width:320px;height:320px;background:#CE5501;top:50%;left:50%;animation-delay:10s}
+    @keyframes float{
+      0%,100%{transform:translate(0,0) scale(1)}
+      33%{transform:translate(100px,-100px) scale(1.08)}
+      66%{transform:translate(-100px,100px) scale(.92)}
+    }
+    .hero-content{position:relative;text-align:center;max-width:900px;padding:0 2rem;z-index:1}
+    .hero-title{
+      font-size:clamp(2.2rem,6vw,5rem);font-weight:900;line-height:1.06;margin-bottom:1rem;
+      background:linear-gradient(135deg,#fff,var(--accent-2));
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    }
+    .hero-subtitle{font-size:1.15rem;color:var(--muted);margin-bottom:2rem}
+    .cta-button{
+      display:inline-block;padding:1rem 2rem;border-radius:999px;font-weight:800;text-decoration:none;
+      background:linear-gradient(135deg,var(--accent-1),var(--accent-2));color:#2b1a00;
+      box-shadow:0 10px 40px rgba(0,0,0,.25),0 10px 40px rgba(255,193,7,.25);
+    }
+
+    /* ===== Sections ===== */
+    .main-content{position:relative;padding:4.5rem 5% 5.5rem;max-width:1600px;margin:0 auto}
+    .section-header{text-align:center;margin-bottom:2.6rem}
+    .section-title{
+      font-size:clamp(1.8rem,4.2vw,3rem);font-weight:800;margin-bottom:.5rem;
+      background:linear-gradient(135deg,var(--accent-1),var(--accent-2));
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    }
+    .section-subtitle{color:var(--muted)}
+
+    /* ===== Games grid ===== */
+    .games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:2rem;perspective:2000px}
+    .game-card{
+      position:relative;background:var(--glass);border:1px solid var(--border);border-radius:24px;overflow:hidden;cursor:pointer;
+      transition:transform .5s cubic-bezier(.23,1,.32,1), box-shadow .5s, border-color .5s;
+      transform-style:preserve-3d;
+    }
+    .game-card:hover{
+      transform:translateY(-14px) rotateX(1.2deg);
+      border-color:rgba(255,193,7,.35);
+      box-shadow:0 24px 70px rgba(0,0,0,.45),0 0 50px rgba(255,193,7,.18);
+    }
+    .poster-wrap{position:relative;height:400px;background:linear-gradient(135deg,#3b3b3b,#6c6c6c)}
+    .poster-wrap::after{
+      content:'';position:absolute;inset:0;left:-100%;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,.22),transparent);
+      transition:left .8s;
+    }
+    .game-card:hover .poster-wrap::after{left:100%}
+    .poster-img{width:100%;height:100%;object-fit:cover;display:block}
+    .game-info{padding:1.4rem}
+    .game-category{
+      display:inline-block;padding:.35rem .9rem;border-radius:999px;margin-bottom:.6rem;
+      font-weight:700;font-size:.85rem;background:rgba(255,193,7,.18);color:var(--accent-2);
+    }
+    .game-title{font-size:1.25rem;font-weight:800;margin-bottom:.35rem}
+    .game-description{color:var(--muted);font-size:.98rem;line-height:1.6;min-height:3.1em;margin-bottom:1rem}
+    .game-footer{display:flex;justify-content:space-between;align-items:center}
+    .game-price{
+      font-size:1.5rem;font-weight:900;
+      background:linear-gradient(135deg,var(--accent-1),var(--accent-2));
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    }
+    .view-btn{
+      padding:.65rem 1.2rem;border-radius:999px;font-weight:700;cursor:pointer;
+      background:yellow;border:2px solid var(--accent-1);color:var(--accent-1);
+      transition: .25s,color .25s,border-color .25s;
+    }
+    .view-btn:hover{background:var(--accent-1);color:#2b1a00;border-color:var(--accent-1)}
+
+    /* ===== Modals ===== */
+    .modal{display:none;position:fixed;inset:0;z-index:2000;padding:2rem;align-items:center;justify-content:center;
+      background:#FF9205;backdrop-filter:blur(14px);opacity:0;transition:opacity .3s}
+    .modal.active{display:flex;opacity:1}
+    .modal-content{
+      width:100%;max-width:780px;max-height:90vh;overflow:auto;position:relative;
+      background:linear-gradient(135deg,rgb(255, 145, 0),#FF9205);
+      border:1px solid rgba(255,193,7,.22);border-radius:28px;padding:2rem;box-shadow:0 40px 120px rgba(0,0,0,.6)
+    }
+    .modal-close{
+      position:absolute;top:1rem;right:1rem;width:46px;height:46px;border-radius:50%;
+      border:2px solid var(--accent-1);background:rgba(255,160,0,.12);color:var(--accent-1);font-size:1.35rem;cursor:pointer;
+    }
+    .modal-header{text-align:center;margin-bottom:1rem}
+    .modal-title{
+      font-size:2rem;font-weight:900;margin:.35rem 0;
+      background:linear-gradient(135deg,var(--accent-1),var(--accent-2));
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    }
+    .modal-category{
+      display:inline-block;padding:.45rem 1.1rem;border-radius:999px;font-weight:700;font-size:.9rem;
+      background:rgba(255,193,7,.18);color:var(--accent-2);
+    }
+    .modal-price{font-size:1.8rem;color:var(--accent-2);font-weight:900;margin-top:.4rem}
+    .modal-body{background:var(--glass);border:1px solid var(--border);border-radius:18px;padding:1.2rem;margin-top:1rem}
+    .modal-actions{display:flex;gap:.8rem;margin-top:1.1rem}
+    .btn{flex:1;padding:1rem 1.2rem;border:none;border-radius:999px;font-weight:800;cursor:pointer}
+    .btn-primary{background:linear-gradient(135deg,var(--accent-1),var(--accent-2));color:#2b1a00}
+    .btn-secondary{background:rgba(255,160,0,.12);border:2px solid var(--accent-1);color:var(--accent-1)}
+    .btn-tertiary{background:rgba(255,255,255,.08);border:2px solid rgba(255,255,255,.15);color:#fff}
+
+    /* Instructions list */
+    .steps{display:grid;gap:1rem;margin-top:.6rem}
+    .step{display:flex;gap:1rem;align-items:flex-start;background:var(--glass);border:1px solid var(--border);padding:1rem;border-radius:14px}
+    .badge{
+      width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;
+      background:linear-gradient(135deg,var(--accent-1),var(--accent-2));color:#2b1a00;flex-shrink:0
+    }
+
+    /* ===== Footer ===== */
+    .footer{background:#FF9205;border-top:1px solid rgba(255,255,255,.12);padding:2.4rem 5% 2rem;margin-top:2rem}
+    .footer-bottom{text-align:center;color:rgba(255,255,255,.55)}
+
+    /* ===== Responsive ===== */
+    @media (max-width:768px){
+      .games-grid{grid-template-columns:1fr}
+      .modal-content{padding:1.6rem}
+      .modal-actions{flex-direction:column}
+    }
+    /* === Searchbar (ADD) === */
+.searchbar{max-width:400px;margin:0 auto 1.6rem;display:flex}
+#searchInput{
+  width:100%; padding:0.9rem 1.1rem; border-radius:30px; border:1px solid var(--border);
+  background:var(--pal-3); color:var(white); outline:none; font-size:1rem;
+  box-shadow:inset 0 0 0 9999px rgba(0,0,0,0); transition:border-color .2s, box-shadow .2s;
+  text-align: center;
+  color:wheat;
+}
+#searchInput:focus{border-color: gray; box-shadow:0 0 0 4px rgba(255,193,7,.15)}
+/* ===== HEADER MOBILE FIX ===== */
+@media (max-width: 768px){
+  /* Header tam enə sığsın, subpiksel daşma olmasın */
+  .header{
+    left: 0; right: 0; width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  /* İç boşluğu bir az azaldırıq */
+  .nav-container{
+    padding: .9rem 16px;
+           /* linklər ikinci sətirə düşə bilsin */
+    gap: .4rem 1rem;           /* yuxarı-aşağı və sağ-sol boşluq */
+  }
+
+  /* Logo ölçüsünü azaldırıq ki, birinci sətirə rahat sığsın */
+  .logo{ font-size: 1.6rem; padding-right: 50px;}
+
+  /* Linklər ikinci sətirdə tam enlə düzülür */
+  .nav-links{
+    width: 100%;
+    justify-content: flex-start;
+    gap: 1rem;
+  }
+  .nav-links a{
+    font-size: .95rem;
+    white-space: nowrap;       /* söz qırılmasın */
+  }
+
+  /* Ümumi: üfüqi daşmanı bağla */
+  html, body{ overflow-x: hidden; }
+
+  /* Header iki sətir olduqda kontentin üst-üstə düşməməsi üçün
+     hero-dakı əvvəlki margin-top-u kompensasiya edirik */
+  body{ padding-top: 110px; }  /* header hündürlüyünə uyğundur */
+  .hero{ margin-top: 0; }      /* əvvəlki 72px margin-top-u ləğv et */
+}
+
+/* Çox kiçik ekranlar üçün bir qədər də sıxlaşdırma */
+@media (max-width: 420px){
+  .logo{ font-size: 1.4rem; }
+  .nav-links{ gap: .8rem; }
+}
+
+
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header" id="header">
+    <div class="nav-container">
+      <div class="logo" onclick="window.scrollTo({top:0,behavior:'smooth'})">LUDORIUM.AZ</div>
+      <nav class="nav-links">
+        <a href="#home">Əsas Səhifə</a>
+        <a href="#games">Oyunlar</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero" id="home">
+    <div class="hero-background">
+      <div class="hero-grid"></div>
+      <div class="floating-shapes"><div class="shape"></div><div class="shape"></div><div class="shape"></div></div>
+    </div>
+    <div class="hero-content">
+      <h1 class="hero-title">Premium Steam Oyunları Platforması</h1>
+      <p class="hero-subtitle">Dünyanın ən sevilən oyunlarını əlçatan qiymətlərlə əldə et. Macəra indi başlayır!</p>
+      <a href="#games" class="cta-button">Oyunları Kəşf Et!</a>
+    </div>
+  </section>
+
+  <!-- Games -->
+  <main class="main-content" id="games">
+    <div class="section-header">
+     <h2 class="section-title">Ən Yaxşıların Toplusu</h2>
+<p class="section-subtitle">Oyun dünyasının inciləri – sənin üçün seçdik</p>
+    </div>
+    <!-- SEARCH (add this right after .section-header) -->
+<div class="searchbar">
+  <input id="searchInput" type="text" placeholder="Oyun adına görə axtar..." autocomplete="off" />
+</div>
+
+    <div class="games-grid" id="gamesGrid"></div>
+  </main>
+
+  <!-- DETAILS MODAL -->
+  <div class="modal" id="detailsModal" aria-hidden="true" role="dialog" aria-labelledby="detailsTitle">
+    <div class="modal-content">
+      <button class="modal-close" id="detailsClose" aria-label="Close">×</button>
+      <div class="modal-header">
+        <span class="modal-category" id="detailsCategory">Action</span>
+        <h2 class="modal-title" id="detailsTitle">Oyun adı</h2>
+        <div class="modal-price" id="detailsPrice">$00.00</div>
+      </div>
+      <div class="modal-body">
+        <h3 style="margin-bottom:.6rem;color:yellow">Detallar</h3>
+        <p id="detailsText" style="line-height:1.8;color:rgba(255,255,255,.9)">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec fermentum sapien non dignissim convallis.
+        </p>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-tertiary" id="detailsInstrBtn">Qaydalar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- INSTRUCTIONS MODAL -->
+  <div class="modal" id="instructionsModal" aria-hidden="true" role="dialog" aria-labelledby="instrTitle">
+    <div class="modal-content">
+      <button class="modal-close" id="instrClose" aria-label="Close">×</button>
+      <div class="modal-header">
+        <h2 class="modal-title" id="instrTitle">Qaydalar</h2>
+      </div>
+      <div class="modal-body">
+        <div class="steps">
+          <div class="step"><div class="badge">1</div><p>Hesaba bir cihazdan daxil olun — OTP kodunu əməkdaş(lar) vasitəsilə əldə edin.</p></div>
+          <div class="step"><div class="badge">2</div><p>Oyunu kompüterinizə yükləyin və quraşdırın.</p></div>
+          <div class="step"><div class="badge">3</div><p>Steami təqdim etdiyiniz YouTube videodakı qaydada offline rejimə keçirin və ya kompüterin Wi-Fi bağlantısını söndürün. Sonra oyunu işə salın və rahat şəkildə oynayın.</p></div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-primary" id="instrOk">OK</button>
+        <button class="btn btn-primary" id="detailsBuy">İndi Al!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-bottom">© <span id="year">2025</span> Ludorium.az</div>
+  </footer>
+
+  <script>
+    /* ========= Helpers ========= */
+    const $  = (s, r=document)=>r.querySelector(s);
+    const $$ = (s, r=document)=>[...r.querySelectorAll(s)];
+
+    /* ========= Data (replace poster URLs with real ones) ========= */
+    const games = [
+      { id:'gv-neo',  category:'Action',    title:'God Of War',   description:'God of War — Kratosun qədim miflərdə keçirdiyi epik döyüş və macəra oyunu.', price:4.99, poster:'godofwar.png',
+        details:`Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis viverra orci sit amet sem fermentum.` },
+      { id:'gv-echo', category:'Adventure', title:'Spider-Man Remastered', description:'Spider-Man Remastered — Peter Parkerin Nyu-Yorkda cinayətkarlığa qarşı epik mübarizə və macəra oyunu.',   price:4.99, poster:'spiderman.png',
+        details:`Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean posuere condimentum mauris.` },
+      { id:'gv-iron', category:'RPG',       title:'Ironbound Realms', description:'Tactical party RPG with deep crafting and factions.',        price:4.99, poster:'image.png',
+        details:`Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam hendrerit nibh vitae pharetra convallis.` }
+    ];
+
+    /* ========= Build Cards ========= */
+    const grid = $('#gamesGrid');
+    function buildCard(g){
+      const el = document.createElement('article');
+      el.className = 'game-card';
+      el.tabIndex = 0;
+      el.dataset.gameId = g.id;
+      el.innerHTML = `
+        <div class="poster-wrap">
+          <img class="poster-img" src="${g.poster}" alt="${g.title} poster" loading="lazy"/>
+        </div>
+        <div class="game-info">
+          <span class="game-category">${g.category}</span>
+          <h3 class="game-title">${g.title}</h3>
+          <p class="game-description">${g.description}</p>
+          <div class="game-footer">
+            <div class="game-price">₼${g.price.toFixed(2)}</div>
+            <button class="view-btn" type="button">View</button>
+          </div>
+        </div>`;
+      el.addEventListener('click',()=>openDetails(g.id));
+      el.addEventListener('keydown',e=>{
+        if(e.key==='Enter'||e.key===' '){e.preventDefault();openDetails(g.id);}
+      });
+      return el;
+    }
+    games.forEach(g=>grid.appendChild(buildCard(g)));
+
+    /* ========= Header scroll effect ========= */
+    const header = $('#header');
+    const onScroll = ()=> header.classList.toggle('scrolled', window.scrollY>10);
+    document.addEventListener('scroll', onScroll); onScroll();
+
+    /* ========= Smooth anchors ========= */
+    $$('a[href^="#"]').forEach(a=>{
+      a.addEventListener('click',e=>{
+        const id=a.getAttribute('href').slice(1);
+        const t=document.getElementById(id);
+        if(t){ e.preventDefault(); window.scrollTo({top:t.getBoundingClientRect().top+window.scrollY-70,behavior:'smooth'}); }
+      });
+    });
+
+    /* ========= Footer year ========= */
+    $('#year').textContent=new Date().getFullYear();
+
+    /* ========= Modals ========= */
+    const detailsModal   = $('#detailsModal');
+    const detailsClose   = $('#detailsClose');
+    const detailsCategory= $('#detailsCategory');
+    const detailsTitle   = $('#detailsTitle');
+    const detailsPrice   = $('#detailsPrice');
+    const detailsBuy     = $('#detailsBuy');
+    const detailsInstrBtn= $('#detailsInstrBtn');
+    const detailsTextEl  = $('#detailsText');   // FIX: select detailsText
+    const instrModal     = $('#instructionsModal');
+    const instrClose     = $('#instrClose');
+    const instrOk        = $('#instrOk');
+
+    function showModal(m){ m.classList.add('active'); m.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; }
+    function hideModal(m){ m.classList.remove('active'); m.setAttribute('aria-hidden','true'); document.body.style.overflow=''; }
+
+    function openDetails(id){
+      const g = games.find(x=>x.id===id);
+      if(!g) return;
+      detailsCategory.textContent = g.category;
+      detailsTitle.textContent    = g.title;
+      detailsPrice.textContent    = `₼${g.price.toFixed(2)}`;
+      detailsTextEl.textContent   = g.details || 'Lorem ipsum dolor sit amet.';
+      showModal(detailsModal);
+    }
+
+    detailsClose.addEventListener('click', ()=>hideModal(detailsModal));
+    detailsModal.addEventListener('click', (e)=>{ if(e.target===detailsModal) hideModal(detailsModal); });
+
+    // Instructions from Details
+    detailsInstrBtn.addEventListener('click', ()=>{
+      hideModal(detailsModal);
+      showModal(instrModal);
+    });
+
+    // Instructions controls
+    [instrClose, instrOk].forEach(btn=>btn.addEventListener('click', ()=>hideModal(instrModal)));
+    instrModal.addEventListener('click', (e)=>{ if(e.target===instrModal) hideModal(instrModal); });
+
+    // Buy button -> open link (you can replace URL)
+    detailsBuy.onclick = () => window.open("http://wa.me/994518320315", "_blank");
+
+    // ESC closes
+    document.addEventListener('keydown', (e)=>{
+      if(e.key==='Escape'){
+        if(detailsModal.classList.contains('active')) hideModal(detailsModal);
+        if(instrModal.classList.contains('active')) hideModal(instrModal);
+      }
+    });
+
+    // Subtle 3D tilt
+    $$('.game-card').forEach(card=>{
+      const strength=10;
+      card.addEventListener('mousemove',e=>{
+        const r=card.getBoundingClientRect();
+        const x=e.clientX-r.left, y=e.clientY-r.top;
+        const rx=((y/r.height)-.5)*-strength;
+        const ry=((x/r.width)-.5)*strength;
+        card.style.transform=`translateY(-12px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+      });
+      card.addEventListener('mouseleave',()=>card.style.transform='');
+    });
+    // === Title Search (ADD) ===
+const searchInput = $('#searchInput');
+function filterGamesByTitle(){
+  const q = (searchInput.value || '').trim().toLowerCase();
+  $$('#gamesGrid .game-card').forEach(card=>{
+    const g = games.find(x => x.id === card.dataset.gameId);
+    const match = !q || (g && g.title.toLowerCase().includes(q));
+    card.style.display = match ? '' : 'none';
+  });
+}
+// live filter
+if (searchInput) searchInput.addEventListener('input', filterGamesByTitle);
+
+  </script>
+</body>
+</html>
